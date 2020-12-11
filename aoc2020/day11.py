@@ -14,28 +14,24 @@ class Grid:
     def __init__(self, rows, new_seat_func):
         self.rows = rows
         self.new_seat = new_seat_func
-
-    def num_rows(self):
-        return len(self.rows)
-
-    def num_cols(self):
-        return len(self.rows[0])
+        self.num_rows = len(self.rows)
+        self.num_cols = len(self.rows[0])
 
     def exists(self, r, c):
-        return 0 <= r < self.num_rows() and 0 <= c < self.num_cols()
+        return 0 <= r < self.num_rows and 0 <= c < self.num_cols
 
     def seat(self, r, c):
         return self.rows[r][c]
 
     def all_seat_pos(self):
-        for r in range(self.num_rows()):
-            for c in range(self.num_cols()):
+        for r in range(self.num_rows):
+            for c in range(self.num_cols):
                 yield (r, c)
 
     def num_occ(self):
         count = 0
-        for r in range(self.num_rows()):
-            for c in range(self.num_cols()):
+        for r in range(self.num_rows):
+            for c in range(self.num_cols):
                 if self.seat(r, c) == "#":
                     count += 1
         return count
@@ -43,10 +39,10 @@ class Grid:
     def next_round(self):
         has_changed = False
         new_rows = []
-        for r in range(self.num_rows()):
+        for r in range(self.num_rows):
             row = []
             new_rows.append(row)
-            for c in range(self.num_cols()):
+            for c in range(self.num_cols):
                 seat = self.seat(r, c)
                 new_seat = self.new_seat(self, r, c)
                 if seat != new_seat:
