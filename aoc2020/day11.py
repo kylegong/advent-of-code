@@ -11,8 +11,8 @@ NEIGHBOR_DELTAS = (
 
 
 class Grid:
-    def __init__(self, lines, new_seat_func):
-        self.rows = [[s for s in line] for line in lines]
+    def __init__(self, rows, new_seat_func):
+        self.rows = rows
         self.new_seat = new_seat_func
 
     def num_rows(self):
@@ -25,14 +25,7 @@ class Grid:
         return 0 <= r < self.num_rows() and 0 <= c < self.num_cols()
 
     def seat(self, r, c):
-        try:
-            return self.rows[r][c]
-        except:
-            print(r, c, self.exists(r, c), self.num_rows(), self.num_cols())
-            raise
-
-    def set_seat(self, r, c, s):
-        self.rows[r][c] = s
+        return self.rows[r][c]
 
     def all_seat_pos(self):
         for r in range(self.num_rows()):
@@ -40,10 +33,12 @@ class Grid:
                 yield (r, c)
 
     def num_occ(self):
-        return len([1 for r, c in self.all_seat_pos() if self.seat(r, c) == "#"])
-
-    def __str__(self):
-        return '\n'.join(''.join(r) for r in self.rows)
+        count = 0
+        for r in range(self.num_rows()):
+            for c in range(self.num_cols()):
+                if self.seat(r, c) == "#":
+                    count += 1
+        return count
 
     def next_round(self):
         has_changed = False
