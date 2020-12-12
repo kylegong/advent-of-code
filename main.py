@@ -7,10 +7,8 @@ parser = argparse.ArgumentParser(description='Process some integers.')
 parser.add_argument('day', type=int, help='day to run')
 parser.add_argument('--year', type=int, default=2020,
                     help='Advent of Code year')
-parser.add_argument('--time', type=bool, action=argparse.BooleanOptionalAction,
-                    help='show time elapsed')
-parser.add_argument('--profile', type=bool, action=argparse.BooleanOptionalAction,
-                    help='run cProfile')
+parser.add_argument('--time', action="store_true", help='show time elapsed')
+parser.add_argument('--profile', action="store_true", help='run cProfile')
 
 
 def run_day(day, year):

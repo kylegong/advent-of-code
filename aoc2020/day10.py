@@ -18,7 +18,7 @@ def part1(nums):
     return [len(threes), len(ones), len(threes) * len(ones)]
 
 
-@functools.cache
+@functools.lru_cache
 def count_ways(j, nums):
     if len(nums) <= 1:
         return 1
