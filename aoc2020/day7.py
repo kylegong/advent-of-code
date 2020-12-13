@@ -13,22 +13,22 @@ class Rules:
 
     def canContain(self, color, contColor):
         """
-        >>> rules = Rules([['a': {'b': 3, 'c': 2}], ['d': {'a': 1}], ['e': {'d': 5}]])
+        >>> rules = Rules([['a', {'b': 3, 'c': 2}], ['d', {'a': 1}], ['e', {'d': 5}]])
         >>> rules.canContain('a', 'b')
         True
-        >>> rules = Rules([['a': {'b': 3, 'c': 2}], ['d': {'a': 1}], ['e': {'d': 5}]])
+        >>> rules = Rules([['a', {'b': 3, 'c': 2}], ['d', {'a': 1}], ['e', {'d': 5}]])
         >>> rules.canContain('d', 'a')
         True
-        >>> rules = Rules([['a': {'b': 3, 'c': 2}], ['d': {'a': 1}], ['e': {'d': 5}]])
+        >>> rules = Rules([['a', {'b': 3, 'c': 2}], ['d', {'a': 1}], ['e', {'d': 5}]])
         >>> rules.canContain('d', 'b')
         True
-        >>> rules = Rules([['a': {'b': 3, 'c': 2}], ['d': {'a': 1}], ['e': {'d': 5}]])
+        >>> rules = Rules([['a', {'b': 3, 'c': 2}], ['d', {'a': 1}], ['e', {'d': 5}]])
         >>> rules.canContain('e', 'a')
         True
-        >>> rules = Rules([['a': {'b': 3, 'c': 2}], ['d': {'a': 1}], ['e': {'d': 5}]])
+        >>> rules = Rules([['a', {'b': 3, 'c': 2}], ['d', {'a': 1}], ['e', {'d': 5}]])
         >>> rules.canContain('b', 'd')
         False
-        >>> rules = Rules([['a': {'b': 3, 'c': 2}], ['d': {'a': 1}], ['e': {'d': 5}]])
+        >>> rules = Rules([['a', {'b': 3, 'c': 2}], ['d', {'a': 1}], ['e', {'d': 5}]])
         >>> rules.canContain('c', 'a')
         False
         """
