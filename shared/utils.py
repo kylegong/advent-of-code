@@ -1,6 +1,7 @@
 import functools
 import itertools
 
+
 def product(lst):
     return functools.reduce(lambda x, y: x*y, lst)
 
@@ -22,11 +23,13 @@ def group(strings):
         groups.append(group)
     return groups
 
+
 NEIGHBOR_DELTAS = (
     (-1,  1), (0,  1), (1,  1),
     (-1,  0),          (1,  0),
     (-1, -1), (0, -1), (1, -1),
 )
+
 
 def neighbors(*coords):
     """
@@ -43,19 +46,18 @@ def neighbors(*coords):
     >>> len(list(neighbors(0, 1, 2, 3)))
     80
     """
-    n_arrays = []
-    for c in coords:
-        n_arrays.append((-1, 0, 1))
+    n_arrays = [(-1, 0, 1) for _ in coords]
     for diff in itertools.product(*n_arrays):
         # Skip itself, e.g. (0, 0, 0, ...)
         if all(d == 0 for d in diff):
             continue
         yield array_add(coords, diff)
 
+
 def array_add(a, b):
     """
     Add the respective values two tuples of equal length.
-    
+
     >>> array_add((1, 2, 3), (7, 11, 13))
     (8, 13, 16)
     """

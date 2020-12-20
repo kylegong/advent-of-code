@@ -10,6 +10,7 @@ def apply_mask(mask, val):
         b[i] = d
     return int("".join(b), 2)
 
+
 def part1(prog):
     mask = None
     mem = {}
@@ -20,10 +21,11 @@ def part1(prog):
         mem[line['addr']] = apply_mask(mask, line['val'])
     return sum(v for k, v in mem.items())
 
+
 def apply_addr_mask(mask, val):
     """
-    >>> apply_addr_mask("XXXXXXXXXXXXXXXXXXXXXXXXXXXXX1XXXX0X", 11)
-    73
+    >>> list(apply_addr_mask("00000000000000000000000010000X", 11))
+    [2059, 2123]
     """
     b = [d for d in format(val, "036b")]
     for i, d in enumerate(mask):
@@ -32,6 +34,7 @@ def apply_addr_mask(mask, val):
         if d == "1":
             b[i] = "1"
     return gen_addrs("".join(b))
+
 
 def gen_addrs(addr):
     """
@@ -63,6 +66,7 @@ def part2(prog):
             mem[addr] = line['val']
     return sum(v for k, v in mem.items())
 
+
 def parse(lines):
     prog = []
     for line in lines:
@@ -71,7 +75,7 @@ def parse(lines):
         else:
             line = line.replace("mem[", "").replace("]", "")
             addr, val = line.split(" = ")
-            prog.append({"addr": int(addr), "val":int(val)})
+            prog.append({"addr": int(addr), "val": int(val)})
     return prog
 
 
