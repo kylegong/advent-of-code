@@ -1,44 +1,61 @@
-def part1(nums, moves):
-    for _ in range(moves):
-        nums = turn(nums)
+def part1(nums, min_n, max_n):
+    for _ in range(100):
+        nums = turn(nums, min_n, max_n)
     return label(nums)
 
 
 def label(nums):
-    one = nums.index(1)
-    return ''.join(str(n) for n in nums[one+1:] + nums[:one])
+    passed = []
+    for n in nums:
+        if n != 1:
+            passed.append(n)
+            continue
+        break
+    return ''.join(str(n) for n in list(nums) + passed)
 
 
-def turn(nums):
-    cur = nums[0]
-    pickup = nums[1:4]
-    rest = nums[4:]
+def turn(nums, min_n, max_n):
+    cur = next(nums)
+    pickup = [next(nums) for n in range(3)]
     dest = cur - 1
-    while not dest in rest:
+    if dest < min_n:
+        dest = max_n
+    while dest in pickup:
         dest -= 1
-        if dest < min(rest):
-            dest = max(rest)
-    dest_i = rest.index(dest)
-    return rest[:dest_i] + [dest] + pickup + rest[dest_i+1:] + [cur]
+        if dest < min_n:
+            dest = max_n
+    passed = []
+    for n in nums:
+        if dest != n:
+            passed.append(n)
+            continue
+        break
+    for n in passed + [dest] + pickup:
+        yield n
+    yield from nums
+    yield cur
 
 
 def add_cups(nums, total):
-    return nums + list(range(max(nums)+1, total+1))
+    yield from nums
+    yield from range(max(nums)+1, total+1)
 
 
 def part2(nums):
-    nums = add_cups(nums, 1_000_000_000)
-    for n in range(10_000_000_000):
-        if n % 10000:
+    nums = add_cups(nums, 1_000_000)
+    for n in range(1_000_000):
+        if n % 10000 == 0:
             print(n)
-        nums = turn(nums)
-    one = nums.index(1)
-    return nums[one+1] * nums[one+2]
+        nums = turn(nums, 1, 1_000_000)
+    for n in nums:
+        if n == 1:
+            break
+    return next(nums) * next(nums)
 
 
 def main(f):
     line = f.readline().strip()
     #line = "389125467"
     nums = [int(n) for n in line]
-    print(part1(nums, 100))
+    print(part1((n for n in nums), min(nums), max(nums)))
     print(part2(nums))
