@@ -12,6 +12,7 @@ func TestTurns(t *testing.T) {
 		arrayTurner{},
 		chTurner{},
 		inPlaceTurner{},
+		mapTurner{},
 	} {
 		t.Run(fmt.Sprintf("%T", turner), func(t *testing.T) {
 			nums := []int{3, 8, 9, 1, 2, 5, 4, 6, 7}
@@ -35,6 +36,7 @@ func TestManyTurns(t *testing.T) {
 		arrayTurner{},
 		chTurner{},
 		inPlaceTurner{},
+		mapTurner{},
 	} {
 		t.Run(fmt.Sprintf("%T", turner), func(t *testing.T) {
 			nums := []int{3, 8, 9, 1, 2, 5, 4, 6, 7}
@@ -51,6 +53,7 @@ func TestTurnsLarge(t *testing.T) {
 		arrayTurner{},
 		chTurner{},
 		inPlaceTurner{},
+		mapTurner{},
 	} {
 		t.Run(fmt.Sprintf("%T", turner), func(t *testing.T) {
 			nums := []int{3, 8, 9, 1, 2, 5, 4, 6, 7}
@@ -144,13 +147,15 @@ func BenchmarkTurns(b *testing.B) {
 		{100, 100},
 		{1_000_000, 100},
 		{9, 1_000_000},
+		{1_000_000, 100_000},
 	} {
 		b.Run(fmt.Sprintf("%vx%v", cfg.max, cfg.turns), func(b *testing.B) {
 			for _, turner := range []turner{
 				arrayTurner{},
-				chTurner{},
-				chTurner{100},
-				inPlaceTurner{},
+				// chTurner{},
+				// chTurner{100},
+				// inPlaceTurner{},
+				mapTurner{},
 			} {
 				b.Run(fmt.Sprintf("%T", turner), func(b *testing.B) {
 					for i := 0; i < b.N; i++ {

@@ -1,22 +1,36 @@
-def part1(nums, min_n, max_n):
-    for _ in range(100):
-        nums = turn(nums, min_n, max_n)
-    return label(nums)
-
-
 def label(nums):
-    passed = []
-    for n in nums:
-        if n != 1:
-            passed.append(n)
-            continue
-        break
-    return ''.join(str(n) for n in list(nums) + passed)
+    """
+    >>> label([5, 8, 3, 7, 4, 1, 9, 2, 6])
+    '92658374'
+    """
+    ind = nums.index(1)
+    return ''.join(str(n) for n in nums[ind+1:] + nums[:ind])
 
 
-def turn(nums, min_n, max_n):
-    cur = next(nums)
-    pickup = [next(nums) for n in range(3)]
+def turns(nums, numTurns):
+    min_n, max_n = min(nums), max(nums)
+    after = {}
+    for i, n in enumerate(nums[:-1]):
+        after[n] = nums[i+1]
+    after[nums[-1]] = nums[0]
+    cur = nums[0]
+    for _ in range(numTurns):
+        turn(after, cur, min_n, max_n)
+        cur = after[cur]
+    last = 1
+    out = []
+    for _ in nums:
+        out.append(after[last])
+        last = after[last]
+    return out
+
+
+def turn(after, cur, min_n, max_n):
+    pickup = {}
+    last = cur
+    for _ in range(3):
+        last = after[last]
+        pickup[last] = after[last]
     dest = cur - 1
     if dest < min_n:
         dest = max_n
@@ -24,38 +38,34 @@ def turn(nums, min_n, max_n):
         dest -= 1
         if dest < min_n:
             dest = max_n
-    passed = []
-    for n in nums:
-        if dest != n:
-            passed.append(n)
-            continue
-        break
-    for n in passed + [dest] + pickup:
-        yield n
-    yield from nums
-    yield cur
+    afterCur = after[last]
+    after[last] = after[dest]
+    after[dest] = after[cur]
+    after[cur] = afterCur
 
 
 def add_cups(nums, total):
-    yield from nums
-    yield from range(max(nums)+1, total+1)
+    """
+    >>> add_cups([4, 3, 1, 2], 6)
+    [4, 3, 1, 2, 5, 6]
+    """
+    return nums + list(range(max(nums)+1, total+1))
+
+
+def part1(nums):
+    out = turns(nums, 100)
+    return label(out)
 
 
 def part2(nums):
     nums = add_cups(nums, 1_000_000)
-    for n in range(1_000_000):
-        if n % 10000 == 0:
-            print(n)
-        nums = turn(nums, 1, 1_000_000)
-    for n in nums:
-        if n == 1:
-            break
-    return next(nums) * next(nums)
+    out = turns(nums, 10_000_000)
+    return out[0] * out[1]
 
 
 def main(f):
     line = f.readline().strip()
-    #line = "389125467"
+    # line = "389125467"
     nums = [int(n) for n in line]
-    print(part1((n for n in nums), min(nums), max(nums)))
+    print(part1(nums))
     print(part2(nums))

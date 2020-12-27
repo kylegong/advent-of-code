@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"strconv"
 	"strings"
 )
@@ -38,7 +37,7 @@ func part1(nums []int) string {
 	for i, n := range nums {
 		in[i] = n
 	}
-	t := inPlaceTurner{}
+	t := mapTurner{}
 	out := t.turns(in, 100)
 	return label(out)
 }
@@ -77,7 +76,7 @@ func part2(nums []int) string {
 	const numCups = 1_000_000
 	const numTurns = 10_000_000
 	in := extend(nums, numCups)
-	t := arrayTurner{}
+	t := mapTurner{}
 	out := t.turns(in, numTurns)
 	nexts := after(out, 1, 2)
 	return fmt.Sprintf("%v", nexts[0]*nexts[1])
@@ -109,7 +108,7 @@ func (t arrayTurner) turns(in []int, numTurns int) (out []int) {
 	for i := 0; i < numTurns; i++ {
 		i := i
 		if i%10000 == 0 {
-			log.Printf("starting turn %v", i)
+			//log.Printf("starting turn %v", i)
 		}
 		t.turn(in, out, min, max)
 		in, out = out, in
@@ -180,7 +179,7 @@ func (t chTurner) turns(inArr []int, numTurns int) (outArr []int) {
 	for i := 0; i < numTurns; i++ {
 		i := i
 		if i%10000 == 0 {
-			log.Printf("starting turn %v", i)
+			//log.Printf("starting turn %v", i)
 		}
 		out = make(chan int, t.bufSize)
 		go func(in <-chan int, out chan<- int) {
@@ -248,7 +247,7 @@ func (t inPlaceTurner) turns(in []int, numTurns int) (out []int) {
 	for i := 0; i < numTurns; i++ {
 		i := i
 		if i%10000 == 0 {
-			log.Printf("starting turn %v", i)
+			//log.Printf("starting turn %v", i)
 		}
 		start = t.turn(in, start, min, max)
 	}
@@ -294,4 +293,54 @@ func (t inPlaceTurner) turn(in []int, start, min, max int) (nextStart int) {
 		i++
 	}
 	return (start + 1) % len(in)
+}
+
+type mapTurner struct{}
+
+func (t mapTurner) turns(in []int, numTurns int) (out []int) {
+	min, max := minMax(in)
+	after := make(map[int]int)
+	for i, n := range in[:len(in)-1] {
+		after[n] = in[i+1]
+	}
+	after[in[len(in)-1]] = in[0]
+	start := in[0]
+	for i := 0; i < numTurns; i++ {
+		i := i
+		if i%10000 == 0 {
+			//log.Printf("starting turn %v", i)
+		}
+		t.turn(after, start, min, max)
+		start = after[start]
+	}
+	last := 1
+	out = make([]int, len(in))
+	for i := range out {
+		out[i] = after[last]
+		last = after[last]
+	}
+	return out
+}
+
+func (t mapTurner) turn(after map[int]int, cur, min, max int) {
+	pickup := make(map[int]int)
+	last := cur
+	for i := 0; i < 3; i++ {
+		last = after[last]
+		pickup[last] = after[last]
+	}
+	dest := cur - 1
+	if dest < min {
+		dest = max
+	}
+	for pickup[dest] != 0 {
+		dest--
+		if dest < min {
+			dest = max
+		}
+	}
+	afterCur := after[last]
+	after[last] = after[dest]
+	after[dest] = after[cur]
+	after[cur] = afterCur
 }
